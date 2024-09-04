@@ -15,15 +15,16 @@ Prerequisite: Docker environment
 
 ```
 $ docker build -t fs_store .
-$ docker run -d -p {your host port}:8000 fs_store
+$ docker run -d -p 8000:8000 fs_store
 ```
+If you want to change the host port, change the BASE_URL too at config.py.
 
 ## CLI Info
 You can access the server via CLI.
 1. Uploadafile\
 fs-store upload-file {file path}
 2. Deleteafile\
-fs-store delete-file {file path}
+fs-store delete-file {filename}
 3. List uploaded files\
 fs-store list-files
 

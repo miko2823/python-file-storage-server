@@ -1,22 +1,23 @@
 import os
 
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel
 
 
-class GlobalConfig(BaseSettings):
+class GlobalConfig(BaseModel):
     ENV_STATE: str = os.getenv("ENV_STATE", "local")
+    BASE_URL: str = "http://localhost:8000"
 
 
 class LocalConfig(GlobalConfig):
-    BASE_URL = "http://localhost:8000"
+    pass
 
 
 class StgConfig(GlobalConfig):
-    BASE_URL = "http://localhost:8000"
+    pass
 
 
 class ProdConfig(GlobalConfig):
-    BASE_URL = "http://localhost:8000"
+    pass
 
 
 class FactoryConfig:
@@ -24,7 +25,7 @@ class FactoryConfig:
         self.env_state = env_state
 
     def __call__(self):
-        if self.env_state == "dev":
+        if self.env_state == "local":
             return LocalConfig()
         elif self.env_state == "stg":
             return StgConfig()
