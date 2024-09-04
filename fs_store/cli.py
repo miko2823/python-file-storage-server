@@ -2,7 +2,7 @@ import requests
 import typer
 
 from fs_store.custom_exception import FileNotExistError
-from fs_store.config import BASE_URL
+from fs_store.config import settings
 
 app = typer.Typer()
 
@@ -10,9 +10,10 @@ app = typer.Typer()
 @app.callback()
 def server_connection_check():
     try:
-        requests.get(BASE_URL)
+        requests.get(settings.BASE_URL)
     except Exception:
         print("Server is not running. Please run the server")
+        raise typer.Exit(code=1)
 
 
 @app.command()
@@ -20,7 +21,7 @@ def upload_file(name: str, file_path: str):
     try:
         with open(file_path, "rb") as file:
             files = {"file": file}
-            response = requests.post(f"{BASE_URL}/files/{name}", files=files)
+            response = requests.post(f"{settings.BASE_URL}/files/{name}", files=files)
             if response.status_code == 201:
                 print(f"{name} was successfully uploaded!")
             else:
@@ -32,7 +33,7 @@ def upload_file(name: str, file_path: str):
 @app.command()
 def delete_file(name: str):
     try:
-        response = requests.delete(f"{BASE_URL}/files/{name}")
+        response = requests.delete(f"{settings.BASE_URL}/files/{name}")
         if response.status_code == 200:
             print(f"{name} was successfully deleted!")
         else:
@@ -44,7 +45,7 @@ def delete_file(name: str):
 @app.command()
 def list_files():
     try:
-        response = requests.get(f"{BASE_URL}/files")
+        response = requests.get(f"{settings.BASE_URL}/files")
         if response.status_code == 200:
             print(response.json()["files"])
         else:
